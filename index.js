@@ -73,6 +73,24 @@ async function run() {
       res.send(result);
     });
 
+    // Update
+    app.put('/addtoys/:id', async(req, res)=>{
+      const id = req.params.id;
+      const data= req.body;
+      console.log(data);
+      const filter = {_id:new ObjectId(id)};
+      const updateDoc = {
+          $set: data
+      }
+      const result = await toyCollection.updateOne(filter, updateDoc);
+      if (result.acknowledged) {
+          res.send({ result, success: true })
+      }
+      else {
+          res.send({ success: false, message: 'Something went wrong' })
+      }
+     })
+
     // DElete
     app.delete("/addtoys/:id", async (req, res) => {
       const id = req.params.id;
