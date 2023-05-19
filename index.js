@@ -37,9 +37,15 @@ async function run() {
     // });
 
     app.get("/addtoys", async (req, res) => {
-      console.log(req.query.email);
-      const { email } = req.query;
-      const query = email ? { "sellerEmail": email } : {};
+      const { category, email } = req.query;
+      let query = {};
+    
+      if (category) {
+        query = { "subCategory": category };
+      } else if (email) {
+        query = { "sellerEmail": email };
+      }
+    
       const result = await toyCollection.find(query).toArray();
       res.send(result);
     });
@@ -89,7 +95,17 @@ async function run() {
       else {
           res.send({ success: false, message: 'Something went wrong' })
       }
-     })
+    })
+    
+    // Category wise
+    // app.get("/addtoys", async (req, res) => {
+    //   console.log(req.query.category);
+    //   const { category } = req.query;
+    //   const query = category ? { "subCategory": category } : {};
+    //   const result = await toyCollection.find(query).toArray();
+    //   res.send(result);
+    // });
+    
 
     // DElete
     app.delete("/addtoys/:id", async (req, res) => {
