@@ -37,18 +37,32 @@ async function run() {
     // });
 
     app.get("/addtoys", async (req, res) => {
-      const { category, email } = req.query;
+      const { category, email, sort } = req.query;
       let query = {};
     
       if (category) {
-        query = { "subCategory": category };
+        query = { subCategory: category };
       } else if (email) {
-        query = { "sellerEmail": email };
+        query = { sellerEmail: email };
       }
     
-      const result = await toyCollection.find(query).toArray();
+      const sortOptions = {};
+    
+      if (sort === "asc") {
+        sortOptions.price = 1;
+      } else if (sort === "desc") {
+        sortOptions.price = -1;
+      }
+    
+      const result = await toyCollection
+        .find(query)
+        .sort(sortOptions)
+        .toArray();
+    
       res.send(result);
     });
+    
+    
 
     app.get("/addtoys/:id", async (req, res) => {
       const id = req.params.id;
